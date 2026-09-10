@@ -94,6 +94,10 @@
     30%{ transform:scale(1.18); }
     100%{ transform:scale(1); }
   }
+  @keyframes dotPulse{
+    0%, 100%{ transform:scale(1); opacity:1; }
+    50%{ transform:scale(1.5); opacity:.5; }
+  }
 
   /* ---------- TIMER CARD (banner + scoreboard, unified) ---------- */
   .timer-section{
@@ -102,9 +106,40 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:32px 16px;
+    padding:60px 16px 40px;
     perspective:1200px;
+    position:relative;
+    overflow:hidden;
+    background: radial-gradient(ellipse 70% 90% at 50% 30%, #1b1e1b 0%, #101210 55%, var(--paper) 100%);
   }
+
+  .spotlight-beam{
+    position:absolute;
+    top:-10%;
+    width:38%;
+    height:140%;
+    background:linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(79,203,124,0.12) 55%, transparent 85%);
+    clip-path: polygon(46% 0%, 54% 0%, 100% 100%, 0% 100%);
+    z-index:0;
+    pointer-events:none;
+    mix-blend-mode:screen;
+  }
+  .spotlight-beam.left{ left:2%; transform:rotate(6deg); transform-origin:top center; }
+  .spotlight-beam.right{ right:2%; transform:rotate(-6deg) scaleX(-1); transform-origin:top center; }
+
+  .ground-glow{
+    position:absolute;
+    bottom:14%;
+    left:50%;
+    transform:translateX(-50%);
+    width:70%;
+    max-width:700px;
+    height:80px;
+    background:radial-gradient(ellipse, rgba(79,203,124,0.45), transparent 70%);
+    z-index:0;
+    pointer-events:none;
+  }
+
   .timer-card{
     max-width:960px;
     width:100%;
@@ -113,6 +148,7 @@
     cursor:default;
     animation: float 4.5s ease-in-out infinite;
     position:relative;
+    z-index:1;
   }
   .timer-card:hover{
     transform: rotateX(8deg) rotateY(-6deg) scale(1.015);
@@ -145,15 +181,7 @@
     box-shadow: 0 6px 0 rgba(0,0,0,0.15);
     position:relative;
     z-index:2;
-    overflow:hidden;
-  }
-  .contract-banner::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%);
-    background-size:250% 100%;
-    animation: shimmer 3.2s ease-in-out infinite;
+    overflow:visible;
   }
   .contract-banner .label{
     font-family:'Neuton', 'Times New Roman', serif;
@@ -165,6 +193,32 @@
     text-shadow: 0 2px 0 rgba(0,0,0,0.35), 0 4px 8px rgba(0,0,0,0.25);
     position:relative;
     z-index:1;
+  }
+  .live-badge{
+    position:absolute;
+    top:-11px;
+    right:14px;
+    background:var(--black);
+    border:2px solid #4FCB7C;
+    color:var(--white);
+    font-family:'Lato', sans-serif;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.12em;
+    padding:3px 9px 3px 7px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    z-index:3;
+  }
+  .live-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#4FCB7C;
+    animation: dotPulse 1.4s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(79,203,124,0.9);
   }
 
   .scoreboard{
@@ -181,10 +235,8 @@
     gap:clamp(10px,2.4vw,28px);
     width:100%;
     transition: box-shadow .4s ease;
-    animation: glowPulse 3s ease-in-out infinite;
   }
   .timer-card:hover .scoreboard{
-    animation-play-state: paused;
     box-shadow:
       0 26px 0 rgba(0,0,0,0.22),
       0 40px 55px rgba(0,0,0,0.38);
@@ -224,12 +276,14 @@
   }
   .since-line{
     text-align:center;
-    color:var(--grey-dark);
+    color:var(--grey-light);
     font-size:13px;
     padding:16px 16px 0;
     font-family:'Lato', sans-serif;
+    position:relative;
+    z-index:1;
   }
-  .since-line strong{ color:var(--black); }
+  .since-line strong{ color:var(--white); }
 
   /* ---------- EMBED CODE ---------- */
   .embed-wrap{
@@ -402,12 +456,16 @@
 </header>
 
 <div class="timer-section">
+  <div class="spotlight-beam left"></div>
+  <div class="spotlight-beam right"></div>
+  <div class="ground-glow"></div>
   <div class="timer-card">
     <div class="sparkle s1"></div>
     <div class="sparkle s2"></div>
     <div class="sparkle s3"></div>
     <div class="sparkle s4"></div>
     <div class="contract-banner">
+      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
       <div class="label">Days Without A Contract</div>
     </div>
     <div class="scoreboard" aria-live="polite">
