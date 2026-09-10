@@ -278,13 +278,7 @@
     font-family:'Lato', sans-serif;
   }
   .embed-panel input[type="text"]{
-    width:100%;
-    padding:8px 10px;
-    border:1px solid var(--grey-line);
-    border-radius:5px;
-    font-size:13px;
-    margin-bottom:14px;
-    font-family:'Lato', sans-serif;
+    display:none;
   }
   .embed-panel textarea{
     width:100%;
@@ -431,8 +425,6 @@
   <div class="embed-wrap">
     <button class="embed-btn" id="embedToggleBtn">Get Embed Code</button>
     <div class="embed-panel" id="embedPanel">
-      <label for="siteUrlInput">Your page's live URL</label>
-      <input type="text" id="siteUrlInput" value="https://your-site.vercel.app" placeholder="https://your-site.vercel.app">
       <label for="embedCodeBox">Embed Code</label>
       <textarea id="embedCodeBox" readonly></textarea>
       <div class="embed-copy-row">
@@ -488,15 +480,14 @@
   }, 1000);
 
   /* ---------- Get Embed Code ---------- */
+  const SITE_URL = 'https://south-fayette-education-association.vercel.app/';
   const embedToggleBtn = document.getElementById('embedToggleBtn');
   const embedPanel = document.getElementById('embedPanel');
-  const siteUrlInput = document.getElementById('siteUrlInput');
   const embedCodeBox = document.getElementById('embedCodeBox');
   const copyEmbedBtn = document.getElementById('copyEmbedBtn');
 
   function updateEmbedCode(){
-    const url = siteUrlInput.value.trim() || 'https://your-site.vercel.app';
-    embedCodeBox.value = `<iframe src="${url}" width="100%" height="360" style="border:none; border-radius:8px;" title="Days Without A Contract - SFEA"></iframe>`;
+    embedCodeBox.value = `<iframe src="${SITE_URL}" width="100%" height="360" style="border:none; border-radius:8px;" title="Days Without A Contract - SFEA"></iframe>`;
   }
 
   embedToggleBtn.addEventListener('click', () => {
@@ -504,8 +495,6 @@
     embedToggleBtn.textContent = isOpen ? 'Hide Embed Code' : 'Get Embed Code';
     if (isOpen) updateEmbedCode();
   });
-
-  siteUrlInput.addEventListener('input', updateEmbedCode);
 
   copyEmbedBtn.addEventListener('click', async () => {
     try{
